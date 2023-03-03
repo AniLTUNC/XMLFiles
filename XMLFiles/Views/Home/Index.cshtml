@@ -1,0 +1,39 @@
+﻿@{
+    ViewBag.Title = "XML Parçalama";
+}
+
+<h1>XML Parçalama</h1>
+
+<label for="txtFilePath">XML Dosyası Yolu:</label>
+<input type="text" id="txtFilePath" />
+<button class="btn btn-primary" id="btnParseXml">Parçala</button>
+
+<div id="divResult"></div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#btnParseXml").click(function () {
+            var filePath = $("#txtFilePath").val();
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("GetBooks", "Home")",
+                data: { 'filePath': filePath },
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    var books = data;
+                    var table = "<table><tr><th>Author</th><th>Title</th><th>Genre</th><th>Price</th><th>Publish Date</th><th>Description</th></tr>";
+                    $.each(books, function (index, book) {
+                        table += "<tr><td>" + book.Author + "</td><td>" + book.Title + "</td><td>" + book.Genre + "</td><td>" + book.Price + "</td><td>" + book.PublishDate + "</td><td>" + book.Description + "</td></tr>";
+                    });
+                    table += "</table>";
+                    $("#divResult").html(table);
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    alert("Hata oluştu: " + errorThrown);
+                }
+            });
+        });
+    });
+</script>
